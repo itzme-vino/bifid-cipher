@@ -4,58 +4,44 @@ def getInput(lines = []):
     Gets input from file input. Returns list of lines from input file
   """
   import fileinput
-
-  for line in fileinput.input():
-    lines.append(line.strip('\n'))
-  return lines
+  return [ line.strip('\n') for line in fileinput.input() ]
 
 class BifidCipher:
   searchInTableau = lambda self, letter : next( (col, row.index(letter)) for col, row in enumerate(self.tableau) if letter in row )
+  getLetter = lambda self, x, y : self.tableau[x][y]
 
-  def __init__(self, tableau = None):
+  def __init__(self, tableau):
     self.tableau = tableau
 
   def encrypt(self, message):
-    tuples = []
     message = message.replace(" ", "")
 
     # searches letter in matrix
-    for letter in message: 
-      tuples.append( self.searchInTableau(letter) )
+    tuples = [ self.searchInTableau(letter) for letter in message ]
 
-    row1, row2 = [], []
-    index = 0 # index of coordinate in pair
     # Order new pairs in two lists, list of rows & list of cols
-    for coordinate in tuples:
-      row1.append(coordinate[0])
-      row2.append(coordinate[1])
+    x_coordinates = [ coordinate[0] for coordinate in tuples ]
+    y_coordinates = [ coordinate[1] for coordinate in tuples ]
     
-    pairs = row1 + row2 # concatenate lists
+    numbers = x_coordinates + y_coordinates # concatenate lists
       
-    string = '' # map pairs to new letter and append to string
-    for i in range(0, len(pairs)-1, 2):
-      newPair = pairs[i:i+2]
-      string += self.tableau[newPair[0]][newPair[1]]
+    # map numbers to new letter and append to cypherText
+    cypherText = [ self.getLetter(numbers[i], numbers[i + 1]) for i in range(0, len(numbers) - 1, 2) ]
 
-    return string
+    return ''.join(cypherText)
 
   def decrypt(self, cypherText):
-    tuples = []
-    flatten = lambda l: [item for sublist in l for item in sublist]
+    flatten = lambda l: [ item for sublist in l for item in sublist ]
 
     # searches letter in matrix
-    for letter in cypherText: 
-      tuples.append( list(self.searchInTableau(letter)) )
-    tuples = flatten(tuples)
+    tuples = flatten( [ list(self.searchInTableau(letter)) for letter in cypherText ] )
 
     half = len(tuples)//2
-    row1, row2 = tuples[:half], tuples[half:]
+    x_coordinates, y_coordinates = tuples[:half], tuples[half:]
 
-    message = ''
-    for tupleNumber in range(half):
-      message += self.tableau[row1[tupleNumber]][row2[tupleNumber]]
+    message = [ self.getLetter(x_coordinates[i], y_coordinates[i]) for i in range(half) ]
     
-    return message
+    return ''.join(message)
 
 def main():
 

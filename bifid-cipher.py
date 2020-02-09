@@ -1,3 +1,4 @@
+
 def getInput(lines = []):
   """ 
     Gets input from file input. Returns list of lines from input file

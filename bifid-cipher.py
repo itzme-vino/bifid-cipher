@@ -50,7 +50,7 @@ class BifidCipher:
 
 def main():
 
-  TABLEAU = [
+  TABLE = [
     ['E', 'N', 'C', 'R', 'Y'],
     ['P', 'T', 'A', 'B', 'D'],
     ['F', 'G', 'H', 'I', 'K'],
@@ -58,7 +58,7 @@ def main():
     ['U', 'V', 'W', 'X', 'Z'],
   ]
 
-  bifid = BifidCipher(TABLEAU)
+  bifid = BifidCipher(TABLE)
 
   inputLines = getInput()
 
